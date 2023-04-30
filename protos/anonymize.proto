@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "AnonymizationService";
+
+package Anonymize;
+
+// The greeting service definition.
+service Anonymizer {
+  // Sends a greeting
+  rpc Anonymize (AnonymizeRQ) returns (AnonymizeRS);
+}
+
+// The request message containing the user's name.
+message AnonymizeRQ {
+  bytes image = 1;
+  string GUID = 2;
+}
+
+// The response message containing the greetings.
+message AnonymizeRS {
+  bytes anonymized_image = 1;
+}
