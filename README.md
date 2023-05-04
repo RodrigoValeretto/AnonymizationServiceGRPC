@@ -1,4 +1,4 @@
-# ComparisonClient
+# Anonymization Service GRPC
 A python anonymization server that connects with comparison service, another repository from this github profile.
 
 ## Running local
