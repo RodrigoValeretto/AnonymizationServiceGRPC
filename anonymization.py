@@ -3,10 +3,14 @@ from concurrent import futures
 import time
 import anonymize_pb2_grpc as pb2_grpc
 import anonymize_pb2 as pb2
-
-# from deepface import DeepFace
+from deepface import DeepFace
 from PIL import Image
 import io
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
+image_path = "/home/rodrigo/Área de Trabalho/Coding/GRPCClientPython/lfw/Aaron_Eckhart/Aaron_Eckhart_0001.jpg"
 
 
 class AnonymizationService(pb2_grpc.AnonymizerServicer):
@@ -20,13 +24,13 @@ class AnonymizationService(pb2_grpc.AnonymizerServicer):
 
         image = Image.open(io.BytesIO(image_bytes))
 
-        # embedded_image = DeepFace.represent(image)
+        embeddings = DeepFace.represent(image_path, model_name="Facenet")
 
-        # print(embedded_image)
+        print("retornou embeddings")
 
         result = pb2.AnonymizeRS()
 
-        result.anonymizedImage = image_bytes
+        result.anonymizedImage = bytes(embeddings)
 
         print("Resultado ANONYMIZE_RS", result)
 
