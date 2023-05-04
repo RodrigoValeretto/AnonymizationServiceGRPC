@@ -18,5 +18,5 @@ message AnonymizeRQ {
 
 // The response message containing the anonymized image.
 message AnonymizeRS {
-  bytes anonymizedImage = 1;
+  repeated double embeddings = 1;
 }
