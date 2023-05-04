@@ -2,7 +2,14 @@
 A python anonymization server that connects with comparison service, another repository from this github profile.
 
 ## Running local
-It is important to install and configure GRPC tools for python, the documentation can be found in https://grpc.io/docs/languages/python/quickstart/
+Install and configure python on local machine, documentation: https://www.python.org/downloads/
+
+Install and configure GRPC tools for python, the documentation can be found in https://grpc.io/docs/languages/python/quickstart/
+
+To install dependencies run
+```shell
+pip install pillow deepface numpy grpcio grpcio-tools
+```
 
 To generate the GRPC files correctly use the command
 ```shell
