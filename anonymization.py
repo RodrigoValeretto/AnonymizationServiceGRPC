@@ -8,7 +8,6 @@ from PIL import Image
 import io
 import logging
 
-logger = logging.getLogger(__name__)
 img_aux_path = "./aux.jpg"
 
 
@@ -17,27 +16,31 @@ class AnonymizationService(pb2_grpc.AnonymizerServicer):
         pass
 
     def Anonymize(self, request, context):
-        logger.info("Request received")
+        try:
+            print("Request received")
 
-        logger.debug("Request: %s", str(request))
+            print("Request: ", str(request))
 
-        image_bytes = request.image
+            image_bytes = request.image
 
-        image = Image.open(io.BytesIO(image_bytes))
+            image = Image.open(io.BytesIO(image_bytes))
 
-        image.save(img_aux_path)
+            image.save(img_aux_path)
 
-        embeddings = DeepFace.represent(img_aux_path)
+            embeddings = DeepFace.represent(img_aux_path)
 
-        logger.info("Embeddings returned")
+            embeddings = embeddings[0]["embedding"]
 
-        result = pb2.AnonymizeRS()
+            print("Embeddings returned:", embeddings)
 
-        result.embeddings = embeddings[0]["embeddings"]
+            result = pb2.AnonymizeRS()
 
-        logger.debug("Result: %s", str(result))
+            result.embeddings[:] = embeddings
 
-        return result
+            return result
+        except Exception as ex:
+            print("An error ocurred: ", ex)
+            return
 
 
 def serve():
