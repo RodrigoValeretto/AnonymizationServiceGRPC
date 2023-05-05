@@ -6,11 +6,10 @@ import anonymize_pb2 as pb2
 from deepface import DeepFace
 from PIL import Image
 import io
-import os
+import logging
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
-image_path = "/home/rodrigo/Área de Trabalho/Coding/GRPCClientPython/lfw/Aaron_Eckhart/Aaron_Eckhart_0001.jpg"
+logger = logging.getLogger(__name__)
+img_aux_path = "./aux.jpg"
 
 
 class AnonymizationService(pb2_grpc.AnonymizerServicer):
@@ -18,21 +17,25 @@ class AnonymizationService(pb2_grpc.AnonymizerServicer):
         pass
 
     def Anonymize(self, request, context):
-        print("Request received:", request)
+        logger.info("Request received")
+
+        logger.debug("Request: %s", str(request))
 
         image_bytes = request.image
 
         image = Image.open(io.BytesIO(image_bytes))
 
-        embeddings = DeepFace.represent(image_path, model_name="Facenet")
+        image.save(img_aux_path)
 
-        print("retornou embeddings")
+        embeddings = DeepFace.represent(img_aux_path)
+
+        logger.info("Embeddings returned")
 
         result = pb2.AnonymizeRS()
 
-        result.anonymizedImage = bytes(embeddings)
+        result.embeddings = embeddings[0]["embeddings"]
 
-        print("Resultado ANONYMIZE_RS", result)
+        logger.debug("Result: %s", str(result))
 
         return result
 
